@@ -17,3 +17,5 @@ Before you commit a change, you have to stage the files you changed. You then co
 * What is a merge conflict?
 
 A merge conflict happens when you try to merge two branches where the same line of a file was edited in conflicting ways, or where a file was deleted on one branch but edited on another. When you have a conflict, git will show you where and what it was and allow  you to solve the conflict.
+
+:)
