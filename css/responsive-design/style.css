@@ -1,3 +1,8 @@
+body {
+  max-width: 960px;
+  /*margin: auto;*/
+}
+
 blockquote {
   border-left: 5px solid blue;
   padding: 15px;
@@ -7,6 +12,18 @@ blockquote {
 cite {
   display: block;
   margin-top: 10px;
+}
+
+#external-links {
+  width: 20%;
+  min-width: 150px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+main {
+  width: 75%;
+  display: inline-block;
 }
 
 #external-links ul {
@@ -30,3 +47,23 @@ figcaption {
   font-style: italic;
   text-align: right;
 }
+
+@media screen and (max-width: 500px) {
+  #external-links {
+    display: block;
+    width: 95%;
+    margin: auto;
+  }
+
+  main {
+    width: 95%;
+    display: block;
+    margin: auto;
+  }
+}
+
+/*@media screen and (max-width: 500px) {
+  body {
+    background-color: hotpink;
+  }
+}*/
