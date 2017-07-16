@@ -15,6 +15,7 @@ cite {
 
 #external-links {
   width: 20%;
+  min-width: 150px;
   display: inline-block;
   vertical-align: top;
 }
@@ -45,3 +46,20 @@ figcaption {
   font-style: italic;
   text-align: right;
 }
+
+@media screen and (max-width: 500px) {
+  #external-links {
+    display: block;
+    width: 95%;
+  }
+
+  main {
+    width: 95%;
+  }
+}
+
+/*@media screen and (max-width: 500px) {
+  body {
+    background-color: hotpink;
+  }
+}*/
