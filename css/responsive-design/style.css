@@ -1,5 +1,6 @@
 body {
   max-width: 960px;
+  /*margin: auto;*/
 }
 
 blockquote {
@@ -51,10 +52,13 @@ figcaption {
   #external-links {
     display: block;
     width: 95%;
+    margin: auto;
   }
 
   main {
     width: 95%;
+    display: block;
+    margin: auto;
   }
 }
 
