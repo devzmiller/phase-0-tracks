@@ -1,0 +1,46 @@
+RIDING AN ELEVATOR
+
+Find out or decide what floor you want to go to.
+Find a sign which tells you which floor you are currently on.
+To the left or right of the elevator doors, find a button panel.
+If the floor number you want to go to is greater than the floor number you are on, push the top button on the panel.
+If the floor number you want to go to is less than the floor number you are on, push the bottom button on the panel.
+Wait for the elevator doors to open.
+Walk straight ahead into the elevator and turn around to face the doors.
+  If there are people in the elevator, stop walking before you bump into a person.
+  If there are too many people in the elevator for you to fit, wait for the elevator doors to close and then push the button outside the elevator doors again.
+Find a button panel to the left or right of the doors. Push the button which has the number of the floor you want to go to printed on it.
+If the elevator doors do not close, push the button which shows two triangles pointing at each other.
+Wait for the elevator to reach the floor you wanted to go to. The elevator will ding, display the number of the floor, and/or the light on the floor button will turn off.
+Wait for the elevator doors to open.
+Walk out of the elevator through the doors.
+
+MAKING TEA
+
+Find the electric kettle on the kitchen counter.
+Pick the kettle up off its base and push the button at the top that makes the lid open.
+Once the lid is open, hold the kettle under the sink and turn the sink on. 
+Wait until the top of the water inside the kettle reaches the .75 liter mark, then turn off the sink.
+  If you are making tea for multiple people, fill the kettle until the water reaches the top measurement mark.
+Close the kettle lid.
+Put the kettle back on its base.
+Open the tea cupboard (it's above the kettle).
+Choose from the selection of tea. If you want to be caffeinated, choose one of the black tea options. If you don't want to be caffeinated, choose one of the herbal or decaf options. If you a robot and making tea for a human, ask the human what kind of tea they want and then choose the corresponding tea.
+Remove a tea bag from the box of tea you chose. On the tea box or tea bag packaging, check what temperature you are supposed to steep this tea at. Also check how long the tea is supposed to steep.
+From the cupboard opposite the tea cupboard, remove a mug and put it on the counter in front of the kettle. Put the tea bag in the mug.
+Push the button on the kettle for the temperature you want your water to boil to. 
+Push the "start" button on the kettle.
+Turn on the kitchen fan so the kettle steam doesn't make the kitchen damp.
+Wait for the kettle to boil.
+When the kettle beeps, it has finished boiling. 
+Be careful when touching the kettle; it will be hot.
+Pick up the kettle and pour the water into your mug until the mug has only 1/4 inch of space at the top.
+Put the kettle back on its base.
+Turn off the kitchen fan.
+Start a timer for the amount of time the tea packaging said to steep the tea.
+Put a spoonful of sugar in the tea, if desired, and stir with a spoon.
+Wait for the timer to finish.
+When the timer finishes, remove the tea bag from the tea. Put the tea bag in the compost bin under the sink.
+Put milk in the tea, if desired, without letting the mug overflow.
+Wait for the tea to cool enough not to burn your mouth before drinking.
+Drink the tea.
