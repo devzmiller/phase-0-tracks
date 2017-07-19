@@ -27,8 +27,8 @@ if age == 0
   age = nil
 end
 
-p hamster_name
-p volume
-p color
-p adoption
-p age
+p "Hamster's Name: #{hamster_name}"
+p "Hamster's Squeak Volume: #{volume}"
+p "Hamster's Fur Color: #{color}"
+p "Is the hamster a good candidate for adoption: #{adoption}"
+p "Hamster's Estimated Age: #{age}"
