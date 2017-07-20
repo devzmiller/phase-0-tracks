@@ -1,0 +1,45 @@
+body {
+  font-family: Helvetica;
+}
+
+a {
+  text-decoration: none;
+  color: green;
+}
+header {
+  text-align: center;
+  background-color: yellow;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.column-1{
+  display: inline-block;
+  width: 40%;
+  margin-left: 10%;
+  vertical-align: top;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.column-2{
+  display: inline-block;
+  width: 40%;
+  margin-left: 2%;
+  vertical-align: top;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+h2 {
+  color: green;
+}
+
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: .8em;
+}
