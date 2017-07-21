@@ -19,8 +19,6 @@ else
   correct_age = false
 end
 
-p correct_age
-
 p "The cafeteria serves garlic bread. Should we order some for you?"
 garlic_bread = gets.chomp
 if garlic_bread[0] == 'y' || garlic_bread[0] == "Y"
@@ -37,3 +35,24 @@ else
   insurance = false
 end
 
+result = ""
+
+if correct_age == true && (garlic_bread == true || insurance == true)
+  result = "Probably not a vampire."
+  if person_name == "Drake Cula" || person_name == "Tu Fang"
+    result = "Definitely a vampire."
+  end
+elsif correct_age == false && garlic_bread == false && insurance == false
+  result = "Almost definitely a vampire."
+  if person_name == "Drake Cula" || person_name == "Tu Fang"
+    result = "Definitely a vampire."
+  end
+elsif correct_age == false && (garlic_bread == false || insurance == false)
+  result = "Probably a vampire."
+  if person_name == "Drake Cula" || person_name == "Tu Fang"
+    result = "Definitely a vampire."
+  end
+else
+  result = "Results inconclusive."
+end
+p result
