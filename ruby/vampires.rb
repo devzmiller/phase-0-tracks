@@ -3,11 +3,13 @@
 # get year of birth
 # get garlic bread preference yes/no
 # get health insurance enroll yes/no
+
 p "How many employees do you want to process?"
 
 employee_count = gets.chomp.to_i
 count = 0
 
+# loop runs until it's run as many times as there are employees
 while count < employee_count
 
   p "What is your name?"
@@ -19,6 +21,8 @@ while count < employee_count
   p "What year were you born?"
   birth_year = gets.chomp.to_i
 
+  # compares current year to birth year 
+  # and allows for a 1 year mismatch in case the user's birthday hasn't happened yet
   if (Time.new.year - birth_year) == age || (Time.new.year - birth_year - 1) == age
     correct_age = true
   else
@@ -41,27 +45,41 @@ while count < employee_count
     insurance = false
   end
 
+  allergy = ""
+
+  while allergy != "done" && allergy != "sunshine"
+    p "Do you have any allergies (enter them one at a time; type 'done' to finish)?"
+    allergy = gets.chomp
+  end
+
   result = ""
 
-  if correct_age == true && (garlic_bread == true || insurance == true)
-    result = "Probably not a vampire."
-    if person_name == "Drake Cula" || person_name == "Tu Fang"
+  # check the sunshine allergy first because the program is supposed to skip straight there
+  if allergy == "sunshine"
+    result = "Probably a vampire."
+
+  # check the name second because it's supposed to overrule any clever lies 
+  elsif person_name == "Drake Cula" || person_name == "Tu Fang"
       result = "Definitely a vampire."
-    end
+
+  elsif correct_age == true && (garlic_bread == true || insurance == true)
+    result = "Probably not a vampire."
+
   elsif correct_age == false && garlic_bread == false && insurance == false
     result = "Almost definitely a vampire."
-    if person_name == "Drake Cula" || person_name == "Tu Fang"
-      result = "Definitely a vampire."
-    end
+
   elsif correct_age == false && (garlic_bread == false || insurance == false)
     result = "Probably a vampire."
-    if person_name == "Drake Cula" || person_name == "Tu Fang"
-      result = "Definitely a vampire."
-    end
+
   else
     result = "Results inconclusive."
+
   end
+
   p result
 
-  count += 1
+  count += 1 # increment the loop counter
+  
 end
+
+p "Actually, never mind! What do these questions have to do with anything? Let's all be friends."
