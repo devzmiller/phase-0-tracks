@@ -61,10 +61,25 @@ def fake_name(real_name)
   end
 
   fake_name = fake_name_arr.join(' ')
-  
+
   # return fake name
   return fake_name
 
 end
 
-print fake_name('Felicia Torres Luciaz')
+user_input = ''
+
+all_names = {}
+
+while user_input != 'quit'
+  puts "Enter a name you'd like to turn into a code name (type 'quit' to quit): "
+  user_input = gets.chomp
+  if user_input != 'quit'
+    code_name = fake_name(user_input)
+    puts code_name
+    name = {user_input => code_name}
+    all_names.update(name)
+  end
+end
+
+all_names.each { |real_name, code_name| puts "#{real_name} is also known as #{code_name}." }
