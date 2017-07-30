@@ -52,3 +52,42 @@ if fib(100).last == 218922995834555169026
 else
   puts "Your fibonacci method does not work. :("
 end
+
+# bubble sort method with array parameter
+def bubble_sort(array)
+
+  #initialize sorted as false
+  sorted = false
+
+  length = array.length
+
+  #loop until sorted is true
+  until sorted == true
+
+    # initialize swapped variable
+    swapped = false
+
+    #array length-1 times, loop
+    for input in 0...(length-1)
+
+      # check if array item at index is greater than array
+      # item at index+1, swap if yes, set swapped variable to true
+      if array[input] > array[input+1]
+        array[input], array[input+1] = array[input+1], array[input]
+        swapped = true
+      end
+    end
+
+    # if the swapped variable is false after inner loop, 
+    # the array is sorted
+    if swapped == false
+      sorted = true
+    end
+  end
+
+  return array
+
+end
+
+test_array = [99, 11, 78, 14, 555, 90, 2, 12, 87]
+print bubble_sort(test_array)
