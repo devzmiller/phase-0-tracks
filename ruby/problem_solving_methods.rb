@@ -21,3 +21,34 @@ def search_array(array, num)
 end  
 
 p search_array(array, 63)
+
+def fib(num_of_numbers)
+
+  fib_array = [0, 1]
+
+  num1 = 0
+  num2 = 1
+
+  while fib_array.length < num_of_numbers
+
+    num3 = num1 + num2
+
+    fib_array.push(num3)
+
+    num1 = num2
+
+    num2 = num3
+
+  end
+
+  return fib_array
+
+end
+
+print fib(6)
+
+if fib(100).last == 218922995834555169026
+  puts "Your fibonacci method works!"
+else
+  puts "Your fibonacci method does not work. :("
+end
