@@ -1,6 +1,6 @@
 class Santa
-  attr_reader :gender, :ethnicity, :reindeer_ranking, :age
-  attr_accessor :gender, :ethnicity, :reindeer_ranking, :age
+  attr_reader :ethnicity
+  attr_accessor :gender,:reindeer_ranking, :age
 
   def initialize(gender, ethnicity)
     puts "Initializing Santa instance..."
@@ -54,3 +54,12 @@ puts claus.get_mad_at("Dancer")
 puts claus.gender = "bigender"
 puts claus.age
 puts claus.ethnicity
+
+100.times do
+  santa = Santa.new(genders.sample, ethnicities.sample)
+  santa.age = rand(141)
+  puts "Gender: #{santa.gender}"
+  puts "Age: #{santa.age}"
+  puts "Reindeer ranking: #{santa.reindeer_ranking}"
+  puts "Ethnicity: #{santa.ethnicity}"
+end
