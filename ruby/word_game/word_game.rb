@@ -100,9 +100,11 @@ class Word_Game
   end
 end
 
-## Driver code.
+## DRIVER CODE
 # Get player one's word.
 # Loop to get player one's guesses. 
+print word
+
 #   If correct guess variable is yes, print congratulatory message and word in progress.
 #   If correct guess variable is no, print disappointed message and word in progress.
 #   If correct guess variable is already guessed, print "you already guessed that letter" message and word in progress.
@@ -113,5 +115,4 @@ puts "Player One, enter a word:"
 guessed_word = gets.chomp
 
 game = Word_Game.new("guessed_word")
-game.guess_letter("s")
-puts game.word_in_progress
+correct, word, game_over = game.guess_letter("c")
