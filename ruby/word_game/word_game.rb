@@ -7,8 +7,10 @@
 # - Repeated guesses don't count against player two
 # - After a guess, player two should see a list of spaces with the letters they've already guessed filled in.
 # - Player two gets a congratulatory/taunting message when they win/lose.
+
+## WORD GAME CLASS
 class Word_Game
-  attr_accessor :word, :guess_count, :guessed_letters, :word_in_progress, :game_over, :max_guesses
+  #attr_accessor :word, :guess_count, :guessed_letters, :word_in_progress, :game_over, :max_guesses
 
   ## Initialize class.
   # Input: word
@@ -19,7 +21,7 @@ class Word_Game
     @guessed_letters = []
     @word_in_progress = Array.new(word.length, "_")
     @game_over = "running"
-    @max_guesses = word.length * 2
+    @max_guesses = word.length + 5
   end
 
   ## Guess method.
@@ -40,6 +42,7 @@ class Word_Game
       correct_guess = "duplicate"
     else
       @guess_count += 1
+      @guessed_letters << letter
       if @word.include?(letter)
         correct_guess = "true"
         update_word(letter)
@@ -103,8 +106,6 @@ end
 ## DRIVER CODE
 # Get player one's word.
 # Loop to get player one's guesses. 
-print word
-
 #   If correct guess variable is yes, print congratulatory message and word in progress.
 #   If correct guess variable is no, print disappointed message and word in progress.
 #   If correct guess variable is already guessed, print "you already guessed that letter" message and word in progress.
@@ -114,5 +115,38 @@ puts "Welcome to the word guessing game!"
 puts "Player One, enter a word:"
 guessed_word = gets.chomp
 
-game = Word_Game.new("guessed_word")
-correct, word, game_over = game.guess_letter("c")
+puts "\n" * 50
+
+game = Word_Game.new(guessed_word)
+
+game_over = "running"
+
+while game_over == "running"
+
+  puts "Player Two, guess a letter:"
+  guess = gets.chomp
+
+  correct, word, game_over = game.guess_letter(guess)
+  if correct == "true"
+    puts "You guessed correctly! The word is:"
+    word.each {|letter| print letter + " "}
+    puts ""
+  elsif correct == "duplicate"
+    puts "You have already guessed that letter. The word is:"
+    word.each {|letter| print letter + " "}
+    puts ""
+  else
+    puts "You guessed wrong! The word is:"
+    word.each {|letter| print letter + " "}
+    puts ""
+  end
+end
+
+if game_over == "win"
+  puts "You won the game! The word was '#{guessed_word}' and you guessed it! You're awesome!"
+else
+  puts "You lost the game! The word was '#{guessed_word}' but you failed to guess it before you ran out of guesses! You're not very good at this."
+
+
+end
+

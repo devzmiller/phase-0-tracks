@@ -1,7 +1,9 @@
+# Some tests don't work anymore but were useful while writing the code.
+
 require_relative 'word_game'
 
 describe Word_Game do
-  let(:game) {Word_Game.new("cactus")}
+  let(:game) {Word_Game.new("fishsticks")}
 
   it "initializes new game with correct word" do
     expect(game.word).to eq ["f", "i", "s", "h", "s", "t", "i", "c", "k", "s"]
@@ -16,7 +18,7 @@ describe Word_Game do
   end
 
   it "initializes new game with correct word in progress" do
-    expect(game.word_in_progress).to eq ["_", "_", "_", "_", "_", "_"]
+    expect(game.word_in_progress).to eq ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
   end
 
   it "initializes new game with correct game over" do
