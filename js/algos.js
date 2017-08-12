@@ -26,6 +26,24 @@ function longestString(array) {
 }
 
 
+// Requirements: take two objects, check if they have at least one matching key-value pair, return true or false
+//Parameters: object 1, object 2
+function checkMatch(object1, object2) {
+
+  // Loop through key-value pairs in object 1
+  for (var key in object1) {
+    // for each key-value pair, check if object 2 has a matching key
+    if (key in object2) {
+      // if key matches, check if the key's value matches
+      if (object1[key] == object2[key]) {
+        //if key's value matches, return true
+        return true;
+      }
+    }
+  }
+  // return false (only should happen if a match not already found and returned true)
+  return false;
+}
 
 
   
@@ -42,3 +60,9 @@ testArray3 = ['doooooom', 'gloom', 'dismay', 'oops'];
 console.log(longestString(testArray));
 console.log(longestString(testArray2));
 console.log(longestString(testArray3));
+
+// Release 2
+console.log(checkMatch({name: "Bob", age: 12, hair: "black"}, {name: "Frances", age: 30, hair: "black"}));
+console.log(checkMatch({name: "Wilfred", age: 34, hair: "blue"}, {name: "Marvin", age: 8, hair: "red"}));
+console.log(checkMatch({name: "Melissa", age: 20, hair: "orange"}, {name: "Ethel", age: 20, hair: "blond"}));
+console.log(checkMatch({name: "Melissa", age: 20, hair: "orange"}, {hat: "top", glasses: "sun"}))
