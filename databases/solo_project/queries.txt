@@ -1,0 +1,44 @@
+sqlite> SELECT * FROM customers;
+1|Bob Wilson|2065555555|true
+2|Julie d'Aubigny|2069999999|false
+3|Marie Curie|2067777777|true
+4|Wilfred Owen|2061111111|false
+
+sqlite> UPDATE orders SET shipped="true" WHERE orderID=3;
+
+sqlite> SELECT * FROM customers, orders WHERE orders.customerID = customers.customerID;
+1|Bob Wilson|2065555555|true|1|Lord of the Rings|true|1
+1|Bob Wilson|2065555555|true|2|Great Expectations|true|1
+1|Bob Wilson|2065555555|true|3|The Golden Compass|true|1
+3|Marie Curie|2067777777|true|4|Pride and Prejudice|true|3
+2|Julie d'Aubigny|2069999999|false|5|Harry Potter|true|2
+
+sqlite> SELECT customers.name, customers.phoneNumber, orders.productName FROM customers JOIN orders ON orders.customerID = customers.customerID;
+Bob Wilson|2065555555|Lord of the Rings
+Bob Wilson|2065555555|Great Expectations
+Bob Wilson|2065555555|The Golden Compass
+Marie Curie|2067777777|Pride and Prejudice
+Julie d'Aubigny|2069999999|Harry Potter
+
+sqlite> DELETE FROM customers WHERE name="Wilfred Owen";
+
+sqlite> SELECT customers.name, orders.productName FROM customers LEFT JOIN orders ON customers.customerID = orders.customerID;
+Bob Wilson|Great Expectations
+Bob Wilson|Lord of the Rings
+Bob Wilson|The Golden Compass
+Julie d'Aubigny|Harry Potter
+Marie Curie|Pride and Prejudice
+
+sqlite> INSERT INTO customers (name, phoneNumber, active) VALUES ("Wilfred Owen", 2062222222, "true");
+
+sqlite> SELECT customers.name, orders.productName FROM customers LEFT JOIN orders ON customers.customerID = orders.customerID;
+Bob Wilson|Great Expectations
+Bob Wilson|Lord of the Rings
+Bob Wilson|The Golden Compass
+Julie d'Aubigny|Harry Potter
+Marie Curie|Pride and Prejudice
+Wilfred Owen|
+
+sqlite> SELECT * FROM customers RIGHT JOIN orders ON customers.customerID = orders.customerID;
+Error: RIGHT and FULL OUTER JOINs are not currently supported
+
