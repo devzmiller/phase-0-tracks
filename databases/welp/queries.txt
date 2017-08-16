@@ -1,0 +1,31 @@
+1.   
+    input:
+        SELECT * FROM welp
+        JOIN reviews ON welp.id=reviews.business_id
+        JOIN users ON reviews.user_id=users.id
+        ;
+    output:
+        2|Amir's Towing|1|4|good|2|2|2|Mandy|Kaling
+        4|The Beagle Nightclub|2|2|terrible|4|1|1|Bradford|Pitt
+        4|The Beagle Nightclub|3|1|horrible|4|4|4|Steven|Wonder
+        5|Lotus Yoga|4|5|fantastic|5|3|3|Angela|Jolie
+2.  
+    input:
+        SELECT users.first_name, users.last_name, welp.business_name, reviews.stars, reviews.comment FROM welp
+        JOIN reviews ON welp.id=reviews.business_id
+        JOIN users ON reviews.user_id=users.id
+        ;      
+    output:
+        Mandy|Kaling|Amir's Towing|4|good
+        Bradford|Pitt|The Beagle Nightclub|2|terrible
+        Steven|Wonder|The Beagle Nightclub|1|horrible
+        Angela|Jolie|Lotus Yoga|5|fantastic
+3.  
+    input: 
+        SELECT users.first_name, users.last_name, welp.business_name, reviews.stars, reviews.comment FROM welp
+        JOIN reviews ON welp.id=reviews.business_id
+        JOIN users ON reviews.user_id=users.id                                  ...> WHERE welp.id=4
+        ;
+   output:
+        Bradford|Pitt|The Beagle Nightclub|2|terrible
+        Steven|Wonder|The Beagle Nightclub|1|horrible
