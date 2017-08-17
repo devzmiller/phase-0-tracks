@@ -74,3 +74,67 @@
 # Month table. ID, month, year
 # Budget-month table. ID, budget ID, month ID, remaining balance
 # Expense table. ID, budget-month ID, notes, amount, date
+
+require 'sqlite3'
+require 'faker'
+
+## Create new budget.
+# Input: budget name
+# Creates new database file.
+# Creates budget table.
+# Creates expense table.
+# Creates month table and inserts current month
+# Creates budget-month table.
+def create_budget(budget_name)
+
+  db = SQLite3::Database.new("#{budget_name}.db")
+  db.results_as_hash = true
+
+  budget_tbl_cmd = <<-SQL
+    CREATE TABLE IF NOT EXISTS budgets(
+      id INTEGER PRIMARY KEY,
+      category_name VARCHAR(255),
+      amount REAL,
+      due_date DATE NULL
+    )
+  SQL
+
+  month_tbl_cmd = <<-SQL
+    CREATE TABLE IF NOT EXISTS months(
+      id INTEGER PRIMARY KEY,
+      month INT,
+      year INT
+    )
+  SQL
+
+  budget_month_tbl_cmd = <<-SQL
+    CREATE TABLE IF NOT EXISTS budget_months(
+      id INTEGER PRIMARY KEY,
+      budget_id INT,
+      month_id INT,
+      balance REAL,
+      FOREIGN KEY (budget_id) REFERENCES budgets(id),
+      FOREIGN KEY (month_id) REFERENCES months(id)
+    )
+  SQL
+
+  expenses_tbl_cmd = <<-SQL
+    CREATE TABLE IF NOT EXISTS expenses(
+      id INTEGER PRIMARY KEY,
+      budget_month_id INT,
+      description VARCHAR(255),
+      amount REAL,
+      expense_date DATE,
+      FOREIGN KEY (budget_month_id) REFERENCES budget_months(id)
+    )
+  SQL
+
+  db.execute(budget_tbl_cmd)
+  db.execute(month_tbl_cmd)
+  db.execute(budget_month_tbl_cmd)
+  db.execute(expenses_tbl_cmd)
+
+  # NEED TO INSERT CURRENT MONTH INTO MONTH TABLE
+end
+
+create_budget("test_budget")
