@@ -10,6 +10,7 @@
 ### NOTES
 # Use separate ruby files for methods and UI. Methods should not take direct input. 
 # UI file needs a method for printing table data prettily.
+# Throw error when a balance goes below 0?
 
 ### METHODS
 
@@ -170,7 +171,77 @@ def add_budget_category(db, category_name, amount, due_date="null")
 
 end 
 
+def print_budgets(db)
+
+  budgets = db.execute("SELECT * FROM budgets")
+
+  puts "Budget ID".ljust(20) + "Budget Category".ljust(20) + "Amount".ljust(20) + "Due Date".ljust(20)
+  budgets.each do |row|
+    row.each do |i|
+      print "#{i.to_s.ljust(20)}"
+    end
+    puts ""
+  end
+end
+
+def add_budget_month(db, budget_id, month, year)
+
+  month_id_cmd = <<-SQL
+    SELECT id FROM months
+    WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
+  SQL
+
+  month_id = db.execute(month_id_cmd, [month, year])
+
+  exists_cmd = <<-SQL
+    SELECT * FROM budget_months
+    WHERE EXISTS (SELECT * FROM budget_months WHERE budget_id=? AND month_id=?)
+  SQL
+
+  puts exists = db.execute(exists_cmd, [budget_id, month_id])
+
+  balance = db.execute("SELECT amount FROM budgets WHERE id=?", [budget_id])
+
+  if exists.empty?
+    db.execute("INSERT INTO budget_months (budget_id, month_id, balance) VALUES (?, ?, ?)", [budget_id, month_id, balance])
+  end
+end
+
+def get_month_id(db, month, year)
+
+  month_id_cmd = <<-SQL
+    SELECT id FROM months
+    WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
+  SQL
+
+  month_id = db.execute(month_id_cmd, [month, year])
+
+end
+
+def enter_expense(db, budget_id, description, amount, date)
+  date_array = date.split('/')
+
+  month_id = get_month_id(db, date_array[0], date_array[2])
+
+  budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
+
+  db.execute("INSERT INTO expenses (budget_month_id, description, amount, expense_date) VALUES (?, ?, ?, ?)", [budget_month_id, description, amount, date])
+
+  update_budget_month(db, budget_month_id, amount)
+end
+
+def update_budget_month(db, budget_month_id, amount)
+  previous_bal = db.execute("SELECT balance FROM budget_months WHERE id=?", [budget_month_id])
+
+  new_bal = previous_bal[0][0]- amount
+
+  db.execute("UPDATE budget_months SET balance=? WHERE id=?", [new_bal, budget_month_id])
+end
+
 ### DRIVER CODE
 database = create_budget("test_budget")
 add_month(database)
-add_budget_category(database, "rent", 800, 31)
+#add_budget_category(database, "rent", 800, 31)
+#print_budgets(database)
+add_budget_month(database, 3, 8, 2017)
+#enter_expense(database, 3, "paid rent", 750, "8/1/2017")
