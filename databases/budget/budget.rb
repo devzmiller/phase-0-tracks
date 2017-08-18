@@ -39,6 +39,10 @@
 # Enters new row into expense table.
 # Calls update budget-month method.
 
+## Add new month
+# Check if current month exists in table
+# If not, create it.
+
 ## Add new budget-month
 # Checks if current month exists in month table. Uses built-in ruby date/time to do this.
 # If not, create new budget-month rows for all budget categories.
@@ -88,7 +92,6 @@ require 'faker'
 def create_budget(budget_name)
 
   db = SQLite3::Database.new("#{budget_name}.db")
-  db.results_as_hash = true
 
   budget_tbl_cmd = <<-SQL
     CREATE TABLE IF NOT EXISTS budgets(
@@ -134,7 +137,40 @@ def create_budget(budget_name)
   db.execute(budget_month_tbl_cmd)
   db.execute(expenses_tbl_cmd)
 
+  return db
+
   # NEED TO INSERT CURRENT MONTH INTO MONTH TABLE
 end
 
-create_budget("test_budget")
+def add_month(db)
+  time = Time.new
+
+  # get month and year from Time. Check if month table has that month and year already.
+  # if it doesn't, insert the month.
+
+  current_month = time.month
+  current_year = time.year
+
+  month_exists_cmd = <<-SQL
+    SELECT * FROM months
+    WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
+  SQL
+
+  month_exists = db.execute(month_exists_cmd, [current_month, current_year])
+
+  if month_exists.empty?
+    db.execute("INSERT INTO months (month, year) VALUES (?, ?)", [current_month, current_year])
+  end
+
+end
+
+def add_budget_category(db, category_name, amount, due_date="null")
+
+  db.execute("INSERT INTO budgets (category_name, amount, due_date) VALUES (?, ?, ?)", [category_name, amount, due_date])
+
+end 
+
+### DRIVER CODE
+database = create_budget("test_budget")
+add_month(database)
+add_budget_category(database, "rent", 800, 31)
