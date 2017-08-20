@@ -273,6 +273,18 @@ def check_total_balance(db, month, year)
 
 end
 
+def view_budget_month(db, month, year)
+  month_id = get_month_id(db, month, year)
+  budget_month = db.execute("SELECT * FROM budget_months WHERE month_id=?", [month_id])
+end
+
+def view_budget_category(db, budget_id)
+
+  budget_category = db.execute("SELECT * FROM budget_months WHERE budget_id=?", [budget_id])
+
+end
+
+
 ### DRIVER CODE
 database = create_budget("test_budget")
 add_month(database)
@@ -283,3 +295,5 @@ add_month(database)
 #enter_expense(database, 8, "groceries", 50, "8/20/2017")
 puts check_balance_category(database, 8, 2017, 1)
 puts check_total_balance(database, 8, 2017)
+p view_budget_month(database, 8, 2017)
+p view_budget_category(database, 3)
