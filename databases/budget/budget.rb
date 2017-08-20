@@ -14,6 +14,21 @@
 
 ### METHODS
 
+# New budget method DONE 
+# Add budget category method DONE
+# Update budget category method
+# Delete budget category method
+# Enter new expense method DONE
+# Add new month method DONE
+# Add new budget-month method DONE
+# Update budget-month method DONE
+# Check remaining balance by category method
+# Check total remaining balance method
+# View all budget categories for current month method
+# View budget category for all months method
+# Print budget categories method DONE
+# Get month ID method DONE
+
 ## Create new budget.
 # Input: budget name
 # Creates new database file.
@@ -81,7 +96,6 @@
 # Expense table. ID, budget-month ID, notes, amount, date
 
 require 'sqlite3'
-require 'faker'
 
 ## Create new budget.
 # Input: budget name
@@ -218,6 +232,12 @@ def get_month_id(db, month, year)
 
 end
 
+def get_budget_month_id(db, budget_id, month_id)
+
+  budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
+
+end
+
 def enter_expense(db, budget_id, description, amount, date)
   date_array = date.split('/')
 
@@ -238,10 +258,28 @@ def update_budget_month(db, budget_month_id, amount)
   db.execute("UPDATE budget_months SET balance=? WHERE id=?", [new_bal, budget_month_id])
 end
 
+def check_balance_category(db, month, year, budget_id)
+  month_id = get_month_id(db, month, year)
+  budget_month_id = get_budget_month_id(db, budget_id, month_id)
+
+  balance = db.execute("SELECT balance FROM budget_months WHERE id=?", [budget_month_id])
+end
+
+def check_total_balance(db, month, year)
+
+  month_id = get_month_id(db, month, year)
+
+  balance = db.execute("SELECT SUM(balance) FROM budget_months WHERE month_id=?", [month_id])
+
+end
+
 ### DRIVER CODE
 database = create_budget("test_budget")
 add_month(database)
-#add_budget_category(database, "rent", 800, 31)
+##add_budget_category(database, "food", 200)
 #print_budgets(database)
-add_budget_month(database, 3, 8, 2017)
+#add_budget_month(database, 8, 8, 2017)
 #enter_expense(database, 3, "paid rent", 750, "8/1/2017")
+#enter_expense(database, 8, "groceries", 50, "8/20/2017")
+puts check_balance_category(database, 8, 2017, 1)
+puts check_total_balance(database, 8, 2017)
