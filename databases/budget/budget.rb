@@ -4,7 +4,7 @@
 # Allow user to enter monthly budget line items (for example, rent: 1000). Provide methods to update, add, remove lines.
 # Allow user to enter expenses (for example, phone bill: -60). Include the budget category, the amount, and notes for any specifics (for example, category might be restaurants, notes might be "Bob's Pizza with Joe")
 # Allow user to check remaining balance in specific budget items and total remaining balance
-# Save the data for each month so you can go back and see how your budgetting faired in February
+# Save the data for each month so you can go back and see how your budgetting fared in February
 # Reset amounts when a new month starts.
 
 ### NOTES
@@ -95,18 +95,15 @@
 # Budget-month table. ID, budget ID, month ID, remaining balance
 # Expense table. ID, budget-month ID, notes, amount, date
 
+##### METHODS #####
+
 require 'sqlite3'
 
-## Create new budget.
-# Input: budget name
-# Creates new database file.
-# Creates budget table.
-# Creates expense table.
-# Creates month table and inserts current month
-# Creates budget-month table.
 def create_budget(budget_name)
 
-  db = SQLite3::Database.new("#{budget_name}.db")
+  #budget_name << ".db"
+
+  db = SQLite3::Database.new("./#{budget_name}.db")
 
   budget_tbl_cmd = <<-SQL
     CREATE TABLE IF NOT EXISTS budgets(
@@ -154,14 +151,10 @@ def create_budget(budget_name)
 
   return db
 
-  # NEED TO INSERT CURRENT MONTH INTO MONTH TABLE
 end
 
 def add_month(db)
   time = Time.new
-
-  # get month and year from Time. Check if month table has that month and year already.
-  # if it doesn't, insert the month.
 
   current_month = time.month
   current_year = time.year
@@ -185,27 +178,11 @@ def add_budget_category(db, category_name, amount, due_date="null")
 
 end 
 
-def print_budgets(db)
-
+def get_budgets(db)
   budgets = db.execute("SELECT * FROM budgets")
-
-  puts "Budget ID".ljust(20) + "Budget Category".ljust(20) + "Amount".ljust(20) + "Due Date".ljust(20)
-  budgets.each do |row|
-    row.each do |i|
-      print "#{i.to_s.ljust(20)}"
-    end
-    puts ""
-  end
 end
 
-def add_budget_month(db, budget_id, month, year)
-
-  month_id_cmd = <<-SQL
-    SELECT id FROM months
-    WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
-  SQL
-
-  month_id = db.execute(month_id_cmd, [month, year])
+def add_budget_month(db, budget_id, month_id)
 
   exists_cmd = <<-SQL
     SELECT * FROM budget_months
@@ -239,9 +216,13 @@ def get_budget_month_id(db, budget_id, month_id)
 end
 
 def enter_expense(db, budget_id, description, amount, date)
+  add_month(db)
+
   date_array = date.split('/')
 
   month_id = get_month_id(db, date_array[0], date_array[2])
+
+  add_budget_month(db, budget_id, month_id)
 
   budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
 
@@ -284,16 +265,23 @@ def view_budget_category(db, budget_id)
 
 end
 
+def update_budget(db, budget_id, new_amount)
+
+  db.execute("UPDATE budgets SET amount=? WHERE id=?", [new_amount, budget_id])
+
+end
+
 
 ### DRIVER CODE
-database = create_budget("test_budget")
-add_month(database)
-##add_budget_category(database, "food", 200)
-#print_budgets(database)
-#add_budget_month(database, 8, 8, 2017)
-#enter_expense(database, 3, "paid rent", 750, "8/1/2017")
-#enter_expense(database, 8, "groceries", 50, "8/20/2017")
-puts check_balance_category(database, 8, 2017, 1)
-puts check_total_balance(database, 8, 2017)
-p view_budget_month(database, 8, 2017)
-p view_budget_category(database, 3)
+#puts database = create_budget("doom_budget")
+# #add_month(database)
+# ##add_budget_category(database, "food", 200)
+# #add_budget_month(database, 8, 8, 2017)
+# #enter_expense(database, 3, "paid rent", 750, "8/1/2017")
+# #enter_expense(database, 8, "groceries", 50, "8/20/2017")
+# puts check_balance_category(database, 8, 2017, 1)
+# puts check_total_balance(database, 8, 2017)
+# p view_budget_month(database, 8, 2017)
+# p view_budget_category(database, 3)
+# update_budget(database, 2, 900)
+# print_budgets(database)
