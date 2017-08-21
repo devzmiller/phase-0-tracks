@@ -153,21 +153,17 @@ def create_budget(budget_name)
 
 end
 
-def add_month(db)
-  time = Time.new
-
-  current_month = time.month
-  current_year = time.year
+def add_month(db, month, year)
 
   month_exists_cmd = <<-SQL
     SELECT * FROM months
     WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
   SQL
 
-  month_exists = db.execute(month_exists_cmd, [current_month, current_year])
+  month_exists = db.execute(month_exists_cmd, [month, year])
 
   if month_exists.empty?
-    db.execute("INSERT INTO months (month, year) VALUES (?, ?)", [current_month, current_year])
+    db.execute("INSERT INTO months (month, year) VALUES (?, ?)", [month, year])
   end
 
 end
@@ -184,47 +180,45 @@ end
 
 def add_budget_month(db, budget_id, month_id)
 
-  exists_cmd = <<-SQL
-    SELECT * FROM budget_months
-    WHERE EXISTS (SELECT * FROM budget_months WHERE budget_id=? AND month_id=?)
-  SQL
+  # exists_cmd = <<-SQL
+  #   SELECT * FROM budget_months
+  #   WHERE EXISTS (SELECT * FROM budget_months WHERE budget_id=? AND month_id=?)
+  # SQL
 
-  puts exists = db.execute(exists_cmd, [budget_id, month_id])
+  # exists = db.execute(exists_cmd, [budget_id, month_id])
 
-  balance = db.execute("SELECT amount FROM budgets WHERE id=?", [budget_id])
+  # if exists.empty?
 
-  if exists.empty?
+    balance = db.execute("SELECT amount FROM budgets WHERE id=?", [budget_id])
     db.execute("INSERT INTO budget_months (budget_id, month_id, balance) VALUES (?, ?, ?)", [budget_id, month_id, balance])
-  end
+  # end
 end
 
 def get_month_id(db, month, year)
 
-  month_id_cmd = <<-SQL
-    SELECT id FROM months
-    WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
-  SQL
-
-  month_id = db.execute(month_id_cmd, [month, year])
+  month_id = db.execute("SELECT id FROM months WHERE month=? AND year=?", [month, year])
+  month_id = month_id[0][0].to_i
 
 end
 
 def get_budget_month_id(db, budget_id, month_id)
 
   budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
+  budget_month_id = budget_month_id[0][0].to_i
 
 end
 
 def enter_expense(db, budget_id, description, amount, date)
-  add_month(db)
 
   date_array = date.split('/')
+
+  add_month(db, date_array[0], date_array[2])
 
   month_id = get_month_id(db, date_array[0], date_array[2])
 
   add_budget_month(db, budget_id, month_id)
 
-  budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
+  budget_month_id = get_budget_month_id(db, budget_id, month_id)
 
   db.execute("INSERT INTO expenses (budget_month_id, description, amount, expense_date) VALUES (?, ?, ?, ?)", [budget_month_id, description, amount, date])
 
@@ -234,7 +228,8 @@ end
 def update_budget_month(db, budget_month_id, amount)
   previous_bal = db.execute("SELECT balance FROM budget_months WHERE id=?", [budget_month_id])
 
-  new_bal = previous_bal[0][0]- amount
+  previous_bal
+  new_bal = previous_bal[0][0] - amount
 
   db.execute("UPDATE budget_months SET balance=? WHERE id=?", [new_bal, budget_month_id])
 end
@@ -243,25 +238,25 @@ def check_balance_category(db, month, year, budget_id)
   month_id = get_month_id(db, month, year)
   budget_month_id = get_budget_month_id(db, budget_id, month_id)
 
-  balance = db.execute("SELECT balance FROM budget_months WHERE id=?", [budget_month_id])
+  balance = db.execute("SELECT balance FROM budget_months WHERE id=?", [budget_month_id])[0][0]
 end
 
 def check_total_balance(db, month, year)
 
   month_id = get_month_id(db, month, year)
 
-  balance = db.execute("SELECT SUM(balance) FROM budget_months WHERE month_id=?", [month_id])
+  balance = db.execute("SELECT SUM(balance) FROM budget_months WHERE month_id=?", [month_id])[0][0]
 
 end
 
 def view_budget_month(db, month, year)
   month_id = get_month_id(db, month, year)
-  budget_month = db.execute("SELECT * FROM budget_months WHERE month_id=?", [month_id])
+  budget_month = db.execute("SELECT budget_months.budget_id, budgets.category_name, months.month, months.year, budget_months.balance FROM budget_months JOIN budgets ON budget_months.budget_id=budgets.id JOIN months ON budget_months.month_id=months.id WHERE month_id=?", [month_id])
 end
 
 def view_budget_category(db, budget_id)
 
-  budget_category = db.execute("SELECT * FROM budget_months WHERE budget_id=?", [budget_id])
+  budget_category = db.execute("SELECT budget_months.budget_id, budgets.category_name, months.month, months.year, budget_months.balance FROM budget_months JOIN budgets ON budget_months.budget_id=budgets.id JOIN months ON budget_months.month_id=months.id WHERE budget_id=?", [budget_id])
 
 end
 
@@ -271,13 +266,20 @@ def update_budget(db, budget_id, new_amount)
 
 end
 
+def view_expenses_month(db, month, year)
+  
+  month_id = get_month_id(db, month, year)
+
+  expenses = db.execute("SELECT budgets.category_name, expenses.description, expenses.amount, expenses.expense_date FROM budget_months JOIN expenses ON expenses.budget_month_id=budget_months.id JOIN budgets ON budget_months.budget_id = budgets.id WHERE month_id=?", [month_id])
+
+end
 
 ### DRIVER CODE
-#puts database = create_budget("doom_budget")
+database = create_budget("test_budget")
 # #add_month(database)
 # ##add_budget_category(database, "food", 200)
 # #add_budget_month(database, 8, 8, 2017)
-# #enter_expense(database, 3, "paid rent", 750, "8/1/2017")
+enter_expense(database, 3, "paid rent", 750, "7/1/2017")
 # #enter_expense(database, 8, "groceries", 50, "8/20/2017")
 # puts check_balance_category(database, 8, 2017, 1)
 # puts check_total_balance(database, 8, 2017)
@@ -285,3 +287,6 @@ end
 # p view_budget_category(database, 3)
 # update_budget(database, 2, 900)
 # print_budgets(database)
+#add_month(database, 7, 2017)
+#add_budget_month(database, 3, 2)
+#get_month_id(database, 7, 2017)
