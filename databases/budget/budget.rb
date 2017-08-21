@@ -91,6 +91,8 @@
 # Input: budget category.
 # Select all rows from budget-month table for chosen category.
 
+## Added a few more methods which became necessary later.
+
 ### DATABASE DESIGN
 
 # Budget table. ID, budget category, due date (can be null), amount

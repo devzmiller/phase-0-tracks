@@ -6,7 +6,7 @@ require_relative 'budget'
 ## Take user input, call back-end methods that interface with the database ##
 
 def ui_new_category(db)
-	puts "Name the budget category:"
+	puts "\nName the budget category:"
 	category_name = gets.chomp
 	puts "Enter the budget amount:"
 	category_amount = gets.chomp.to_f
@@ -17,36 +17,30 @@ def ui_new_category(db)
 	else
 		add_budget_category(db, category_name, category_amount, due_date)
 	end
-	puts "Your category has been added!"
+	puts "\nYour category has been added!\n\n"
 end
 
 def ui_list_categories(db)
 	budgets = get_budgets(db)
-
-	puts "Budget ID".ljust(20) + "Budget Category".ljust(20) + "Amount".ljust(20) + "Due Date".ljust(20)
-	budgets.each do |row|
-		row.each do |i|
-		  print "#{i.to_s.ljust(20)}"
-		end
-		puts ""
-	end
+	puts "\nBudget ID".ljust(30) + "Budget Category".ljust(30) + "Amount".ljust(30) + "Due Date".ljust(30)
+	print_table(budgets)
 end
 
 def ui_update_category(db)
 	ui_list_categories(db)
 
-	puts "Enter the ID of the category you'd like to update:"
+	puts "\nEnter the ID of the category you'd like to update:"
 	budget_id = gets.chomp.to_i
 	puts "Enter the new budget amount:"
 	amount = gets.chomp.to_f
 	update_budget(db, budget_id, amount)
-	puts "Budget updated! Please note, this will only update the budget balances for future months. If you would like to update the current month, enter an expense to adjust the balance."
+	puts "\nBudget updated! Please note, if you have already entered expenses for this category this month, \nonly the amount for future months will be updated. If you would like to update the current month, \nenter an expense to adjust the balance."
 end
 
 def ui_new_expense(db)
 	ui_list_categories(db)
 
-	puts "Enter the budget ID of your expense:"
+	puts "\nEnter the budget ID of your expense:"
 	budget_id = gets.chomp.to_i
 	puts "Enter a description of the expense:"
 	description = gets.chomp
@@ -56,56 +50,48 @@ def ui_new_expense(db)
 	date = gets.chomp
 
 	enter_expense(db, budget_id, description, amount, date)
+
+	puts "\nYour expense has been added!"
 end
 
 def ui_view_month(db)
-	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
+	puts "\nEnter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
 	year = gets.chomp.to_i
 	budgets = view_budget_month(db, month, year)
 
-	puts "Budget ID".ljust(20) + "Budget Category".ljust(20) + "Month".ljust(20) + "Year".ljust(20) + "Balance".ljust(20)
-	budgets.each do |row|
-		row.each do |i|
-		  print "#{i.to_s.ljust(20)}"
-		end
-		puts ""
-	end
+	puts "\nBudget ID".ljust(30) + "Budget Category".ljust(30) + "Month".ljust(30) + "Year".ljust(30) + "Balance".ljust(30)
+	print_table(budgets)
 end
 
 def ui_view_category(db)
 	ui_list_categories(db)
 
-	puts "Enter the budget ID for the category you wish to view:"
+	puts "\nEnter the budget ID for the category you wish to view:"
 	budget_id = gets.chomp.to_i
 
 	budgets = view_budget_category(db, budget_id)
 
-	puts "Budget ID".ljust(20) + "Budget Category".ljust(20) + "Month".ljust(20) + "Year".ljust(20) + "Balance".ljust(20)
-	budgets.each do |row|
-		row.each do |i|
-		  print "#{i.to_s.ljust(20)}"
-		end
-		puts ""
-	end
+	puts "\nBudget ID".ljust(30) + "Budget Category".ljust(30) + "Month".ljust(30) + "Year".ljust(30) + "Balance".ljust(30)
+	print_table(budgets)
 end
 
 def ui_view_total_balance(db)
-	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
+	puts "\nEnter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
 	year = gets.chomp.to_i
 
 	balance = get_total_balance(db, month, year)
 
-	puts "Your total balance from the month of #{month}/#{year} is $%0.2f." % balance
+	puts "\nYour total balance from the month of #{month}/#{year} is $%0.2f." % balance
 end
 
 def ui_view_category_balance(db)
 	ui_list_categories(db)
 
-	puts "Enter the budget ID for the category you wish to view:"
+	puts "\nEnter the budget ID for the category you wish to view:"
 	budget_id = gets.chomp.to_i
 	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
@@ -114,38 +100,41 @@ def ui_view_category_balance(db)
 
 	balance = get_balance_category(db, month, year, budget_id)
 
-	puts "Your total balance in this category from the month of #{month}/#{year} is $%0.2f." % balance
+	puts "\nYour total balance in this category from the month of #{month}/#{year} is $%0.2f." % balance
 end
 
 def ui_view_expenses_month(db)
-	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
+	puts "\nEnter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
 	year = gets.chomp.to_i
 
 	expenses = view_expenses_month(db, month, year)
 
-	puts "Budget Category".ljust(20) + "Expense Description".ljust(20) + "Expense Amount".ljust(20) + "Expense Date".ljust(20)
-	expenses.each do |row|
-		row.each do |i|
-		  print "#{i.to_s.ljust(20)}"
-		end
-		puts ""
-	end
+	puts "\nBudget Category".ljust(30) + "Expense Description".ljust(30) + "Expense Amount".ljust(30) + "Expense Date".ljust(30)
+	print_table(expenses)
 end
 
 def ui_view_expenses_category(db)
 	ui_list_categories(db)
 
-	puts "Enter the budget ID for the category you wish to view:"
+	puts "\nEnter the budget ID for the category you wish to view:"
 	budget_id = gets.chomp.to_i
 
 	expenses = view_expenses_category(db, budget_id)
 
-	puts "Expense Description".ljust(20) + "Expense Amount".ljust(20) + "Expense Date".ljust(20)
-	expenses.each do |row|
+	puts "\nExpense Description".ljust(30) + "Expense Amount".ljust(30) + "Expense Date".ljust(30)
+	print_table(expenses)
+end
+
+def print_table(array)
+	array.each do |row|
 		row.each do |i|
-		  print "#{i.to_s.ljust(20)}"
+			if i.kind_of?(Float)
+				print "$%0.2f".ljust(30) % i
+			else
+		  		print "#{i.to_s.ljust(30)}"
+		  	end
 		end
 		puts ""
 	end
@@ -213,7 +202,7 @@ while run_options == true
 	puts "(8) Check remaining balance by category"
 	puts "(9) View all expenses for month"
 	puts "(10) View all expenses for category"
-	puts "(11) Exit program"
+	puts "(11) Exit program\n\n"
 	choice = gets.chomp
 
 	case choice
@@ -245,7 +234,7 @@ while run_options == true
 	end
 
 	if run_options == true
-		puts "Press enter to select another option."
+		puts "\nPress enter to select another option."
 		input = gets.chomp
 	end
 end
