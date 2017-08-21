@@ -1,7 +1,11 @@
 require_relative 'budget'
 
-def ui_new_category(db)
+##### User Interface Methods #####
+##################################
 
+## Take user input, call back-end methods that interface with the database ##
+
+def ui_new_category(db)
 	puts "Name the budget category:"
 	category_name = gets.chomp
 	puts "Enter the budget amount:"
@@ -40,7 +44,6 @@ def ui_update_category(db)
 end
 
 def ui_new_expense(db)
-
 	ui_list_categories(db)
 
 	puts "Enter the budget ID of your expense:"
@@ -56,7 +59,6 @@ def ui_new_expense(db)
 end
 
 def ui_view_month(db)
-
 	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
@@ -73,7 +75,6 @@ def ui_view_month(db)
 end
 
 def ui_view_category(db)
-
 	ui_list_categories(db)
 
 	puts "Enter the budget ID for the category you wish to view:"
@@ -88,24 +89,20 @@ def ui_view_category(db)
 		end
 		puts ""
 	end
-
 end
 
 def ui_view_total_balance(db)
-
 	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
 	year = gets.chomp.to_i
 
-	balance = check_total_balance(db, month, year)
+	balance = get_total_balance(db, month, year)
 
 	puts "Your total balance from the month of #{month}/#{year} is $%0.2f." % balance
-
 end
 
 def ui_view_category_balance(db)
-
 	ui_list_categories(db)
 
 	puts "Enter the budget ID for the category you wish to view:"
@@ -115,14 +112,12 @@ def ui_view_category_balance(db)
 	puts "Enter the year you wish to view:"
 	year = gets.chomp.to_i
 
-	balance = check_balance_category(db, month, year, budget_id)
+	balance = get_balance_category(db, month, year, budget_id)
 
 	puts "Your total balance in this category from the month of #{month}/#{year} is $%0.2f." % balance
-
 end
 
 def ui_view_expenses_month(db)
-	
 	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
 	puts "Enter the year you wish to view:"
@@ -137,11 +132,9 @@ def ui_view_expenses_month(db)
 		end
 		puts ""
 	end
-
 end
 
 def ui_view_expenses_category(db)
-	
 	ui_list_categories(db)
 
 	puts "Enter the budget ID for the category you wish to view:"
@@ -156,47 +149,54 @@ def ui_view_expenses_category(db)
 		end
 		puts ""
 	end
-
 end
 
-puts "***********"
-puts "Budget App"
-puts "Created by Devin Miller, 8/20/2017"
-puts "***********"
+##### DRIVER CODE #####
+#######################
+
+## Displays options and takes user selections. ##
+
+puts "**********************************************"
+puts "*****           Budget App              ******"
+puts "***** Created by Devin Miller, 8/20/2017 *****"
+puts "**********************************************"
 
 run_options = true
 
 while run_options == true
-	puts "Choose an option:"
+	puts "\nChoose an option:"
 	puts "(1) Create a new budget"
-	puts "(2) Choose an existing budget"
+	puts "(2) Choose an existing budget\n\n"
+
 	choice = gets.chomp
+
 	case choice
 	when "1"
-		puts "Enter a name for your budget (no spaces):"
+		puts "\nEnter a name for your budget (no spaces):"
 		budget_name = gets.chomp
 		db = create_budget(budget_name)
-		puts "Your budget has been created!"
+		puts "\nYour budget has been created!\n\n"
 		run_options = false
 	when "2"
-		puts "Existing budgets:"
+		puts "\nExisting budgets:"
 		budgets = Dir["*.db"]
 		budgets.each do |budget|
 			print budget + "\t"
 		end
-		puts ""
-		puts "Choose a budget:"
+		puts "\n\n"
+		puts "Choose a budget:\n\n"
 		budget_name = gets.chomp.split(".db")
 		db = create_budget(budget_name[0])
+		puts "\nYou chose the #{budget_name[0]} budget."
 		run_options = false
 	else
-		puts "******"
-		puts "Invalid input. Try again."
-		puts "******"
+		puts "\nInvalid input. Try again."
 	end
 
-	puts "Press enter to continue."
-	input = gets.chomp
+	if run_options == false
+		puts "\nPress enter to continue."
+		input = gets.chomp
+	end
 end
 
 run_options = true
