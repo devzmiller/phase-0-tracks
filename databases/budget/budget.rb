@@ -16,8 +16,7 @@
 
 # New budget method DONE 
 # Add budget category method DONE
-# Update budget category method
-# Delete budget category method
+# Update budget category method DONE
 # Enter new expense method DONE
 # Add new month method DONE
 # Add new budget-month method DONE
@@ -100,10 +99,9 @@
 require 'sqlite3'
 
 def create_budget(budget_name)
+  budget_name << ".db"
 
-  #budget_name << ".db"
-
-  db = SQLite3::Database.new("./#{budget_name}.db")
+  db = SQLite3::Database.new("#{budget_name}")
 
   budget_tbl_cmd = <<-SQL
     CREATE TABLE IF NOT EXISTS budgets(
@@ -150,11 +148,9 @@ def create_budget(budget_name)
   db.execute(expenses_tbl_cmd)
 
   return db
-
 end
 
 def add_month(db, month, year)
-
   month_exists_cmd = <<-SQL
     SELECT * FROM months
     WHERE EXISTS (SELECT month, year FROM months WHERE month=? AND year=?)
@@ -165,13 +161,10 @@ def add_month(db, month, year)
   if month_exists.empty?
     db.execute("INSERT INTO months (month, year) VALUES (?, ?)", [month, year])
   end
-
 end
 
 def add_budget_category(db, category_name, amount, due_date="null")
-
   db.execute("INSERT INTO budgets (category_name, amount, due_date) VALUES (?, ?, ?)", [category_name, amount, due_date])
-
 end 
 
 def get_budgets(db)
@@ -179,37 +172,31 @@ def get_budgets(db)
 end
 
 def add_budget_month(db, budget_id, month_id)
+  exists_cmd = <<-SQL
+    SELECT * FROM budget_months
+    WHERE EXISTS (SELECT * FROM budget_months WHERE budget_id=? AND month_id=?)
+  SQL
 
-  # exists_cmd = <<-SQL
-  #   SELECT * FROM budget_months
-  #   WHERE EXISTS (SELECT * FROM budget_months WHERE budget_id=? AND month_id=?)
-  # SQL
+  exists = db.execute(exists_cmd, [budget_id, month_id])
 
-  # exists = db.execute(exists_cmd, [budget_id, month_id])
-
-  # if exists.empty?
+  if exists.empty?
 
     balance = db.execute("SELECT amount FROM budgets WHERE id=?", [budget_id])
     db.execute("INSERT INTO budget_months (budget_id, month_id, balance) VALUES (?, ?, ?)", [budget_id, month_id, balance])
-  # end
+  end
 end
 
 def get_month_id(db, month, year)
-
   month_id = db.execute("SELECT id FROM months WHERE month=? AND year=?", [month, year])
   month_id = month_id[0][0].to_i
-
 end
 
 def get_budget_month_id(db, budget_id, month_id)
-
   budget_month_id = db.execute("SELECT id FROM budget_months WHERE budget_id=? AND month_id=?", [budget_id, month_id])
   budget_month_id = budget_month_id[0][0].to_i
-
 end
 
 def enter_expense(db, budget_id, description, amount, date)
-
   date_array = date.split('/')
 
   add_month(db, date_array[0], date_array[2])
@@ -242,11 +229,9 @@ def check_balance_category(db, month, year, budget_id)
 end
 
 def check_total_balance(db, month, year)
-
   month_id = get_month_id(db, month, year)
 
   balance = db.execute("SELECT SUM(balance) FROM budget_months WHERE month_id=?", [month_id])[0][0]
-
 end
 
 def view_budget_month(db, month, year)
@@ -255,31 +240,30 @@ def view_budget_month(db, month, year)
 end
 
 def view_budget_category(db, budget_id)
-
   budget_category = db.execute("SELECT budget_months.budget_id, budgets.category_name, months.month, months.year, budget_months.balance FROM budget_months JOIN budgets ON budget_months.budget_id=budgets.id JOIN months ON budget_months.month_id=months.id WHERE budget_id=?", [budget_id])
-
 end
 
 def update_budget(db, budget_id, new_amount)
-
   db.execute("UPDATE budgets SET amount=? WHERE id=?", [new_amount, budget_id])
-
 end
 
 def view_expenses_month(db, month, year)
-  
   month_id = get_month_id(db, month, year)
 
   expenses = db.execute("SELECT budgets.category_name, expenses.description, expenses.amount, expenses.expense_date FROM budget_months JOIN expenses ON expenses.budget_month_id=budget_months.id JOIN budgets ON budget_months.budget_id = budgets.id WHERE month_id=?", [month_id])
-
 end
 
-### DRIVER CODE
+def view_expenses_category(db, budget_id)
+
+  expenses = db.execute("SELECT expenses.description, expenses.amount, expenses.expense_date FROM budget_months JOIN expenses ON expenses.budget_month_id=budget_months.id WHERE budget_id=?", [budget_id])
+end
+
+### TEST CODE
 database = create_budget("test_budget")
 # #add_month(database)
 # ##add_budget_category(database, "food", 200)
 # #add_budget_month(database, 8, 8, 2017)
-enter_expense(database, 3, "paid rent", 750, "7/1/2017")
+#enter_expense(database, 3, "paid rent", 750, "7/1/2017")
 # #enter_expense(database, 8, "groceries", 50, "8/20/2017")
 # puts check_balance_category(database, 8, 2017, 1)
 # puts check_total_balance(database, 8, 2017)

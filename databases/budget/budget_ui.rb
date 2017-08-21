@@ -76,7 +76,7 @@ def ui_view_category(db)
 
 	ui_list_categories(db)
 
-	puts "Enter the budget ID for the cateogry you wish to view:"
+	puts "Enter the budget ID for the category you wish to view:"
 	budget_id = gets.chomp.to_i
 
 	budgets = view_budget_category(db, budget_id)
@@ -108,7 +108,7 @@ def ui_view_category_balance(db)
 
 	ui_list_categories(db)
 
-	puts "Enter the budget ID for the cateogry you wish to view:"
+	puts "Enter the budget ID for the category you wish to view:"
 	budget_id = gets.chomp.to_i
 	puts "Enter the month you wish to view (in number format, ex. 6 for June):"
 	month = gets.chomp.to_i
@@ -131,6 +131,25 @@ def ui_view_expenses_month(db)
 	expenses = view_expenses_month(db, month, year)
 
 	puts "Budget Category".ljust(20) + "Expense Description".ljust(20) + "Expense Amount".ljust(20) + "Expense Date".ljust(20)
+	expenses.each do |row|
+		row.each do |i|
+		  print "#{i.to_s.ljust(20)}"
+		end
+		puts ""
+	end
+
+end
+
+def ui_view_expenses_category(db)
+	
+	ui_list_categories(db)
+
+	puts "Enter the budget ID for the category you wish to view:"
+	budget_id = gets.chomp.to_i
+
+	expenses = view_expenses_category(db, budget_id)
+
+	puts "Expense Description".ljust(20) + "Expense Amount".ljust(20) + "Expense Date".ljust(20)
 	expenses.each do |row|
 		row.each do |i|
 		  print "#{i.to_s.ljust(20)}"
@@ -193,7 +212,8 @@ while run_options == true
 	puts "(7) Check total remaining balance for month"
 	puts "(8) Check remaining balance by category"
 	puts "(9) View all expenses for month"
-	puts "(10) Exit program"
+	puts "(10) View all expenses for category"
+	puts "(11) Exit program"
 	choice = gets.chomp
 
 	case choice
@@ -217,6 +237,8 @@ while run_options == true
 	when "9"
 		ui_view_expenses_month(db)
 	when "10"
+		ui_view_expenses_category(db)
+	when "11"
 		run_options = false
 	else
 		puts "Invalid Input. Try again."
