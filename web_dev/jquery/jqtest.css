@@ -1,0 +1,15 @@
+div {
+	border: solid 2px black;
+	display: inline-block;
+}
+
+.button {
+	padding: 10px;
+	vertical-align: top;
+}
+
+.space {
+	padding: 100px;
+	margin: 100px;
+	vertical-align: bottom;
+}
