@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Update Your Info</title>
+</head>
+<body>
+
+	<form method="POST" action="/updated/<%= @student_id %>">
+	  <input type="text" name="name" placeholder="Name">
+	  <input type="text" name="age" placeholder="Age">
+	  <input type="text" name="campus" placeholder="Campus">
+	  <button type="submit">Update</button>
+	</form>
+</body>
+</html>

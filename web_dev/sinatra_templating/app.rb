@@ -25,3 +25,23 @@ post '/students' do
 end
 
 # add static resources
+
+
+get '/students/:id' do
+  @student_id = params['id'].to_i
+  @student = db.execute("SELECT name, age, campus FROM students WHERE id=?", @student_id)
+  erb :student_template
+end
+
+
+post '/update/:student_id' do
+	@student_id = params['student_id'].to_i 
+  erb :form
+end
+
+post '/updated/:student_id' do
+
+	@student_id = params['student_id'].to_i 
+	db.execute("UPDATE students SET name = ?, campus = ?, age = ? WHERE id=?", [params['name'], params['campus'], params['age'].to_i, @student_id])
+	redirect '/'
+end
